@@ -5,7 +5,9 @@ import { Component } from "react";
 const INITIAL_STATE = {
       filterValue: "",
     agreed: false,
-    username: ''
+    username: '',
+    gender: '',
+    age: ''
 }
 
 class App extends Component {
@@ -15,10 +17,11 @@ class App extends Component {
 
   handleChange = (e) => {
     console.log(e.target.name);
-    const {value, name} = e.target
+    const {value, name, checked, type} = e.target
+    console.log(checked, type);
     this.setState(
       {
-        [name] : value
+        [name] : type === "checkbox" ? checked : value
       }
     ) 
   }
@@ -35,16 +38,29 @@ class App extends Component {
 
 
   render() {
+    const {username, gender, age, agreed} = this.state
     return (
       <>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" value={this.state.username} onChange={this.handleChange} name="username" />
-          <input type="checkbox" name="agreed" onChange={this.handleChange}/>
-          <button disabled={!this.state.agreed} type="submit">Submit</button>
-          
+          <input type="text" placeholder="Enter name" value={username} onChange={this.handleChange} name="username" />
+          <div className="genders">
+          <label> Male
+            <input type="radio" name="gender" value="male" checked={gender === "male"}  onChange={this.handleChange}/>
+          </label>
+          <label> Female
+            <input type="radio" name="gender" value="female" checked={gender === "female"} onChange={this.handleChange}/>
+          </label>
+          </div>
+          <label> Chose your age
+            <select name="age" value={age} onChange={this.handleChange}>
+              <option value=""></option>
+              <option value="0-18">18-</option>
+              <option value="19+">18+</option>
+            </select>
+          </label>
+          <input type="checkbox" name="agreed" checked={agreed} onChange={this.handleChange}/>
+          <button disabled={!agreed} type="submit">Submit</button>
         </form>
-        <p>filter</p>
-        <input name="filetValue" onChange={this.handleChange} value={this.state.filterValue} type="text" />
 
       </>
     );
